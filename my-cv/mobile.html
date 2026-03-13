@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Jonathan Conde — Senior Motion Designer & 3D Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --accent: #c8ff00;
+    --accent2: #ff6b35;
+    --text: #f0ede8;
+    --muted: #a8a5a0;
+    --border: #252525;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 100; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 1.1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(14,14,14,0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    z-index: 999;
+  }
+
+  .nav-logo {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid rgba(200,255,0,0.3);
+    color: var(--accent);
+    border-radius: 100px;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  .avail-dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--text);
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ── MOBILE MENU OVERLAY ── */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: #0e0e0e;
+    z-index: 990;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .mobile-menu a {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+  .mob-sub {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .mob-sub a {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted) !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh;
+    padding: 6rem 1.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* subtle green glow behind name */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: -20%;
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(60,100,0,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(4rem, 17vw, 6.5rem);
+    line-height: 0.9;
+    font-weight: 400;
+    animation: fadeUp 0.7s 0.2s ease both;
+    margin-bottom: 1.8rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--muted);
+    max-width: 36ch;
+    animation: fadeUp 0.7s 0.35s ease both;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta {
+    animation: fadeUp 0.7s 0.45s ease both;
+  }
+
+  .hero-bottom {
+    position: relative;
+    z-index: 1;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.7s 0.55s ease both;
+  }
+
+  .hero-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-contact a {
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .scroll-hint {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 3rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 9vw, 3.5rem);
+    font-weight: 400;
+  }
+
+  .section-number {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+
+  /* ── PROFILE ── */
+  .stats-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .stat-item {
+    flex: 1;
+    padding: 1.2rem 1rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .profile-text p {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .profile-text p:first-child {
+    font-size: 1rem;
+    color: var(--text);
+    font-family: 'DM Serif Display', serif;
+    line-height: 1.6;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-item {
+    padding: 1.8rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .exp-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+  }
+
+  .exp-date {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .exp-date span {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  .exp-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .exp-tag.freelance { border-color: var(--accent); color: var(--accent); }
+  .exp-tag.fulltime  { border-color: var(--accent2); color: var(--accent2); }
+
+  .exp-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.7rem;
+  }
+
+  .exp-desc {
+    font-size: 0.85rem;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+
+  /* ── SKILLS ── */
+  .skill-block {
+    margin-bottom: 2rem;
+  }
+
+  .skill-cat-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-row {
+    margin-bottom: 1rem;
+  }
+
+  .skill-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+  }
+
+  .skill-pct { color: var(--muted); font-size: 0.78rem; }
+
+  .skill-bar {
+    height: 1px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    background: var(--accent);
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .skill-fill.animate { width: var(--w); }
+
+  .lang-row {
+    display: flex;
+    gap: 0;
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2.5rem;
+  }
+
+  .lang-item { flex: 1; }
+  .lang-item + .lang-item { border-left: 1px solid var(--border); padding-left: 1.5rem; }
+
+  .lang-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .lang-level {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ── EDUCATION ── */
+  .edu-card {
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .edu-card:last-child { margin-bottom: 0; }
+
+  .edu-year-bg {
+    position: absolute;
+    top: -0.5rem; right: 1rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 5rem;
+    color: var(--border);
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+
+  .edu-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+
+  .edu-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+
+  .edu-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    position: relative;
+  }
+
+  /* ── AI SECTION ── */
+  .section-subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  .section-subtitle em { color: var(--accent); font-style: normal; }
+
+  .ai-card {
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .ai-card:last-child { margin-bottom: 0; }
+
+  .ai-icon { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
+
+  .ai-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .ai-card p {
+    font-size: 0.85rem;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+  }
+
+  .footer-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  .footer-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  /* ── BUTTONS ── */
+  .pdf-btn, .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.9rem 1.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, gap 0.2s;
+    width: fit-content;
+  }
+
+  .pdf-btn {
+    background: var(--accent);
+    color: #000;
+  }
+  .pdf-btn:hover { background: #d9ff33; gap: 1rem; }
+
+  .cta-btn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .cta-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .pdf-btn svg, .cta-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DESKTOP REDIRECT NOTICE ── */
+  .desktop-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .desktop-bar a {
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- Desktop switcher bar -->
+<div class="desktop-bar">
+  <span>Mobile version</span>
+  <a href="/?desktop=1">View full site →</a>
+</div>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#ai" onclick="closeMenu()">AI</a>
+  <a href="#education" onclick="closeMenu()">Education</a>
+  <div class="mob-sub">
+    <a href="https://jonyconde.com" target="_blank">Portfolio ↗</a>
+    <a href="https://www.instagram.com/jconde.motion/" target="_blank">Instagram ↗</a>
+    <a href="mailto:jonyac@gmail.com">Email ↗</a>
+  </div>
+</div>
+
+<!-- Fixed nav -->
+<nav>
+  <div style="display:flex; align-items:center; gap:0.8rem;">
+    <div class="nav-logo">Jonathan Conde</div>
+    <span class="avail-badge">
+      <span class="avail-dot"></span>For hire
+    </span>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Senior Motion Designer & 3D Artist — Sydney, AU</div>
+    <h1>Jonathan<br><em>Conde</em></h1>
+    <p class="hero-sub">A decade of bringing ideas to life through motion, 3D, and visual storytelling. Originally from Colombia, now making things move in Sydney.</p>
+    <div class="hero-cta">
+      <button class="pdf-btn" onclick="downloadPDF()">
+        Download CV
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M7 1v9M3 7l4 4 4-4M1 13h12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-contact">
+      <a href="mailto:jonyac@gmail.com">jonyac@gmail.com</a>
+      <a href="tel:+61406571516">+61 406 571 516</a>
+      <a href="https://jonyconde.com" target="_blank">jonyconde.com</a>
+      <a href="https://www.instagram.com/jconde.motion/" target="_blank">@jconde.motion</a>
+      <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </div>
+</section>
+
+<!-- ── PROFILE ── -->
+<section class="section" id="about">
+  <div class="section-header reveal">
+    <h2 class="section-title">Profile</h2>
+    <span class="section-number">01</span>
+  </div>
+
+  <div class="stats-row reveal">
+    <div class="stat-item">
+      <div class="stat-value" data-target="10">0</div>
+      <div class="stat-label">Years exp.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" data-target="120">0</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" data-target="2">0</div>
+      <div class="stat-label">Languages</div>
+    </div>
+  </div>
+
+  <div class="profile-text reveal">
+    <p>Hello, I'm Jonathan Conde — a Senior Motion Designer and 3D Artist originally from Colombia, now based in Sydney.</p>
+    <p>With over a decade of experience in creative design, I specialize in motion graphics, 3D animation, and visual storytelling. I began my journey in graphic design at 14, developed a passion for photography and 3D at 16, and built my first computer at 18.</p>
+    <p>I'm deeply passionate about innovation and spend my free time exploring new advancements in motion design. Whether you're looking for creative design solutions or just want to chat about animation, I'd love to connect.</p>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section class="section" id="experience">
+  <div class="section-header reveal">
+    <h2 class="section-title">Experience</h2>
+    <span class="section-number">02</span>
+  </div>
+
+  <div class="exp-item reveal">
+    <div class="exp-meta">
+      <div class="exp-date">2019 – Present<span>Ongoing</span></div>
+      <div class="exp-tag freelance">Freelance</div>
+    </div>
+    <div class="exp-title">Jconde</div>
+    <p class="exp-desc">I collaborate with agencies, animation studios, and media channels to create 3D animations, develop storyboards, craft style frames, and execute motion graphics projects.</p>
+  </div>
+
+  <div class="exp-item reveal">
+    <div class="exp-meta">
+      <div class="exp-date">Sep 2024<span>4-month contract</span></div>
+      <div class="exp-tag freelance">Freelance</div>
+    </div>
+    <div class="exp-title">M&C Saatchi</div>
+    <p class="exp-desc">3D animation, ideation, and creative direction for a variety of campaigns. Storyboards and style frames that communicate compelling messages through motion.</p>
+  </div>
+
+  <div class="exp-item reveal">
+    <div class="exp-meta">
+      <div class="exp-date">2021 – 2022</div>
+      <div class="exp-tag freelance">Freelance</div>
+    </div>
+    <div class="exp-title">FBI Talent Co.</div>
+    <p class="exp-desc">Motion design support across diverse campaigns and industries, delivering high-quality creative assets for a variety of clients.</p>
+  </div>
+
+  <div class="exp-item reveal">
+    <div class="exp-meta">
+      <div class="exp-date">2021 – 2022</div>
+      <div class="exp-tag fulltime">Full-time</div>
+    </div>
+    <div class="exp-title">Traffik</div>
+    <p class="exp-desc">Storyboards and 3D assets for presentations, video editing for social media, and art direction for animation-driven campaigns.</p>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section class="section" id="skills">
+  <div class="section-header reveal">
+    <h2 class="section-title">Expertise</h2>
+    <span class="section-number">03</span>
+  </div>
+
+  <div class="skill-block reveal">
+    <div class="skill-cat-label">Disciplines</div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Motion Graphics</span><span class="skill-pct">97%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:97%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Design</span><span class="skill-pct">95%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:95%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>VFX</span><span class="skill-pct">92%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:92%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Art Direction</span><span class="skill-pct">88%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:88%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Photography</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:80%"></div></div>
+    </div>
+  </div>
+
+  <div class="skill-block reveal">
+    <div class="skill-cat-label">Software</div>
+    <div class="skill-row">
+      <div class="skill-top"><span>After Effects</span><span class="skill-pct">97%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:97%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Cinema 4D</span><span class="skill-pct">95%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:95%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Redshift</span><span class="skill-pct">88%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:88%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Houdini</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:80%"></div></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-top"><span>Figma</span><span class="skill-pct">85%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:85%"></div></div>
+    </div>
+  </div>
+
+  <div class="lang-row reveal">
+    <div class="lang-item">
+      <div class="lang-name">English</div>
+      <div class="lang-level">C2 — Proficient</div>
+    </div>
+    <div class="lang-item">
+      <div class="lang-name">Spanish</div>
+      <div class="lang-level">C1 — Advanced</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section class="section" id="education">
+  <div class="section-header reveal">
+    <h2 class="section-title">Education</h2>
+    <span class="section-number">04</span>
+  </div>
+
+  <div class="edu-card reveal">
+    <div class="edu-year-bg">'19</div>
+    <div class="edu-label">2014 – 2019</div>
+    <h3>Autonoma University</h3>
+    <p>Major in Graphic Design — Foundation in visual communication, typography, and design principles.</p>
+  </div>
+
+  <div class="edu-card reveal">
+    <div class="edu-year-bg">'25</div>
+    <div class="edu-label">2017 – 2025</div>
+    <h3>Online Courses & Certifications</h3>
+    <p>Advanced Motion Graphics — Continuous professional development in the latest motion design and 3D techniques.</p>
+  </div>
+</section>
+
+<!-- ── AI WORKFLOWS ── -->
+<section class="section" id="ai">
+  <div class="section-header reveal">
+    <h2 class="section-title">AI Workflows</h2>
+    <span class="section-number">05</span>
+  </div>
+
+  <p class="section-subtitle reveal">
+    Creating <em>AI-powered film campaigns</em> for clients — blending generative tools with 3D, motion and creative direction.
+  </p>
+
+  <div class="ai-card reveal">
+    <span class="ai-icon">🎬</span>
+    <h3>AI Film Campaigns</h3>
+    <p>End-to-end AI campaign production — concept through final film, delivering cinematic results faster and leaner than traditional production.</p>
+  </div>
+
+  <div class="ai-card reveal">
+    <span class="ai-icon">🔗</span>
+    <h3>Hybrid AI + 3D</h3>
+    <p>Cinema 4D, Redshift and generative AI working together — the precision of 3D with the speed and texture of AI tools.</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-name">Jonathan<br><em style="font-style:italic;color:var(--accent)">Conde</em></div>
+
+  <div class="footer-links">
+    <a href="https://jonyconde.com" target="_blank">Portfolio</a>
+    <a href="https://www.instagram.com/jconde.motion/" target="_blank">Instagram</a>
+    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    <a href="mailto:jonyac@gmail.com">Email</a>
+  </div>
+
+  <div class="footer-cta">
+    <button class="pdf-btn" onclick="downloadPDF()">
+      Download CV
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M7 1v9M3 7l4 4 4-4M1 13h12"/>
+      </svg>
+    </button>
+    <a href="mailto:jonyac@gmail.com" class="cta-btn">
+      Get in touch
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M1 7h12M7 1l6 6-6 6"/>
+      </svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  // ── HAMBURGER ──
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn  = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn  = document.getElementById('hamburger');
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── CV DOWNLOAD ──
+  function downloadPDF() {
+    const a = document.createElement('a');
+    a.href = 'Jonathan_Conde_-_CV.pdf';
+    a.download = 'Jonathan_Conde_CV.pdf';
+    a.click();
+  }
+
+  // ── SCROLL REVEAL + SKILL BARS + COUNT UP ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+
+      // Animate skill bars
+      entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.classList.add('animate');
+      });
+
+      // Count up stat numbers
+      entry.target.querySelectorAll('[data-target]').forEach(el => {
+        const target = parseFloat(el.dataset.target);
+        if (isNaN(target)) return;
+        const suffix = el.dataset.target >= 10 ? '+' : '';
+        let start = null;
+        const dur = 1600;
+        const step = ts => {
+          if (!start) start = ts;
+          const p = Math.min((ts - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(ease * target) + (p === 1 ? suffix : '');
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -10px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

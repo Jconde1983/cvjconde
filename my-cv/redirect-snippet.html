@@ -1,0 +1,16 @@
+<!--
+  ── MOBILE REDIRECT ──
+  Paste this snippet inside <head> in your index.html.
+  It redirects mobile users to mobile.html automatically.
+  On mobile.html there's a "View full site →" link that sends them back with ?desktop=1
+-->
+<script>
+  (function() {
+    var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+                || window.innerWidth < 768;
+    var wantsDesktop = location.search.indexOf('desktop=1') !== -1;
+    if (isMobile && !wantsDesktop) {
+      location.replace('mobile.html');
+    }
+  })();
+</script>
